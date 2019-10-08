@@ -17,28 +17,31 @@ namespace FilmenBackEnd.Controllers
     {
         private FilmenEntities db = new FilmenEntities();
 
-        // GET: api/viewings
+        // API URL POST http://localhost:XXXXX/api/viewings
+        // XXXXX - Port number
+        // Desc: Returns a list of Viewing View Models, a.k.a a list of shows that will be displayed as a list of movies to be shown
         public List<ViewingViewModel> GetViewings()
         {
-            var listOfViewings = db.viewings.Include(v => v.lounge).OrderBy(v => v.date);
-            var listOfMovies = new List<ViewingViewModel>();
+            var listOfViewings = db.viewings.Include(v => v.lounge).OrderBy(v => v.date); // Get viewings plus the laoung and sort them in date order
+            var listOfMovies = new List<ViewingViewModel>(); // Define the return structure
 
-            foreach(var viewing in listOfViewings)
+            foreach(var viewing in listOfViewings) // For each movie in the viewings table (plus lounge information)
             {
-                 var movie = MovieFetcher.GetMovie(viewing.moviedbid);
+                var movie = MovieFetcher.GetMovie(viewing.moviedbid); // Make a fetch to Movie DB to get information about a movie
 
+                // To the return list, add a View Model and add the information from both the Viewing, Lounge and MovieDB into a single object
                 listOfMovies.Add(new ViewingViewModel
                 {
-                    MovieName = movie.Title,
-                    Length = movie.Runtime ?? 0,
-                    Adult = movie.Adult,
-                    LoungeName = viewing.lounge.name,
-                    ViewingDate = viewing.date,
-                    TotalSeats = viewing.lounge.seats.Count()
+                    MovieName = movie.Title, // Title for the Movie from the MovieDB
+                    Length = movie.Runtime ?? 0, // The runtime from MovieDB
+                    Adult = movie.Adult, // If it's a adult movie, from MovieDB
+                    LoungeName = viewing.lounge.name, // The lounge name from Lounge entity in the database (contected using Entity Framework)
+                    ViewingDate = viewing.date, // Date of the viewing from the Viewing entity in the database
+                    TotalSeats = viewing.lounge.seats.Count() // And number of seats in the Lounge
                 });
             }
             
-            return listOfMovies;
+            return listOfMovies; // Return the list of Movies
         }
 
         // GET: api/viewings/5
