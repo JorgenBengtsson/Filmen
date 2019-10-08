@@ -1,0 +1,506 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="FilmenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="booking">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="viewingid" Type="int" Nullable="false" />
+          <Property Name="payed" Type="bit" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cinema">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="city" Type="varchar" MaxLength="50" />
+          <Property Name="created" Type="date" />
+        </EntityType>
+        <EntityType Name="lounge">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cinemaid" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="seat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="loungeid" Type="int" Nullable="false" />
+          <Property Name="seatnr" Type="int" Nullable="false" />
+          <Property Name="row" Type="int" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ticket">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="bookingid" Type="int" Nullable="false" />
+          <Property Name="seatid" Type="int" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="email" Type="varchar" MaxLength="150" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="viewing">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="loungeid" Type="int" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
+          <Property Name="moviedbid" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="bookable" Type="bit" Nullable="false" />
+          <Property Name="created" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_booking_users">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_viewing">
+          <End Role="viewing" Type="Self.viewing" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="viewing">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="viewingid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lounge_cinema">
+          <End Role="cinema" Type="Self.cinema" Multiplicity="1" />
+          <End Role="lounge" Type="Self.lounge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cinema">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lounge">
+              <PropertyRef Name="cinemaid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_seat_lounge">
+          <End Role="lounge" Type="Self.lounge" Multiplicity="1" />
+          <End Role="seat" Type="Self.seat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lounge">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat">
+              <PropertyRef Name="loungeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ticket_booking">
+          <End Role="booking" Type="Self.booking" Multiplicity="1" />
+          <End Role="ticket" Type="Self.ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="booking">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ticket">
+              <PropertyRef Name="bookingid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ticket_seat">
+          <End Role="seat" Type="Self.seat" Multiplicity="1" />
+          <End Role="ticket" Type="Self.ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="seat">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ticket">
+              <PropertyRef Name="seatid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_viewing_lounge">
+          <End Role="lounge" Type="Self.lounge" Multiplicity="1" />
+          <End Role="viewing" Type="Self.viewing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lounge">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="viewing">
+              <PropertyRef Name="loungeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FilmenModelStoreContainer">
+          <EntitySet Name="booking" EntityType="Self.booking" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cinema" EntityType="Self.cinema" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lounge" EntityType="Self.lounge" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="seat" EntityType="Self.seat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ticket" EntityType="Self.ticket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="viewing" EntityType="Self.viewing" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_booking_users" Association="Self.FK_booking_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_viewing" Association="Self.FK_booking_viewing">
+            <End Role="viewing" EntitySet="viewing" />
+            <End Role="booking" EntitySet="booking" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lounge_cinema" Association="Self.FK_lounge_cinema">
+            <End Role="cinema" EntitySet="cinema" />
+            <End Role="lounge" EntitySet="lounge" />
+          </AssociationSet>
+          <AssociationSet Name="FK_seat_lounge" Association="Self.FK_seat_lounge">
+            <End Role="lounge" EntitySet="lounge" />
+            <End Role="seat" EntitySet="seat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ticket_booking" Association="Self.FK_ticket_booking">
+            <End Role="booking" EntitySet="booking" />
+            <End Role="ticket" EntitySet="ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ticket_seat" Association="Self.FK_ticket_seat">
+            <End Role="seat" EntitySet="seat" />
+            <End Role="ticket" EntitySet="ticket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_viewing_lounge" Association="Self.FK_viewing_lounge">
+            <End Role="lounge" EntitySet="lounge" />
+            <End Role="viewing" EntitySet="viewing" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="FilmenModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="booking">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="viewingid" Type="Int32" Nullable="false" />
+          <Property Name="payed" Type="Boolean" Nullable="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="user" Relationship="Self.FK_booking_users" FromRole="booking" ToRole="users" />
+          <NavigationProperty Name="viewing" Relationship="Self.FK_booking_viewing" FromRole="booking" ToRole="viewing" />
+          <NavigationProperty Name="tickets" Relationship="Self.FK_ticket_booking" FromRole="booking" ToRole="ticket" />
+        </EntityType>
+        <EntityType Name="cinema">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="city" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="created" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="lounges" Relationship="Self.FK_lounge_cinema" FromRole="cinema" ToRole="lounge" />
+        </EntityType>
+        <EntityType Name="lounge">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cinemaid" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="cinema" Relationship="Self.FK_lounge_cinema" FromRole="lounge" ToRole="cinema" />
+          <NavigationProperty Name="seats" Relationship="Self.FK_seat_lounge" FromRole="lounge" ToRole="seat" />
+          <NavigationProperty Name="viewings" Relationship="Self.FK_viewing_lounge" FromRole="lounge" ToRole="viewing" />
+        </EntityType>
+        <EntityType Name="seat">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="loungeid" Type="Int32" Nullable="false" />
+          <Property Name="seatnr" Type="Int32" Nullable="false" />
+          <Property Name="row" Type="Int32" Nullable="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="lounge" Relationship="Self.FK_seat_lounge" FromRole="seat" ToRole="lounge" />
+          <NavigationProperty Name="tickets" Relationship="Self.FK_ticket_seat" FromRole="seat" ToRole="ticket" />
+        </EntityType>
+        <EntityType Name="ticket">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="bookingid" Type="Int32" Nullable="false" />
+          <Property Name="seatid" Type="Int32" Nullable="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="booking" Relationship="Self.FK_ticket_booking" FromRole="ticket" ToRole="booking" />
+          <NavigationProperty Name="seat" Relationship="Self.FK_ticket_seat" FromRole="ticket" ToRole="seat" />
+        </EntityType>
+        <EntityType Name="user">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="bookings" Relationship="Self.FK_booking_users" FromRole="users" ToRole="booking" />
+        </EntityType>
+        <EntityType Name="viewing">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="loungeid" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="moviedbid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="bookable" Type="Boolean" Nullable="false" />
+          <Property Name="created" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="bookings" Relationship="Self.FK_booking_viewing" FromRole="viewing" ToRole="booking" a:GetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+          <NavigationProperty Name="lounge" Relationship="Self.FK_viewing_lounge" FromRole="viewing" ToRole="lounge" a:GetterAccess="Internal" xmlns:a="http://schemas.microsoft.com/ado/2006/04/codegeneration" />
+        </EntityType>
+        <Association Name="FK_booking_users">
+          <End Role="users" Type="Self.user" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_booking_viewing">
+          <End Role="viewing" Type="Self.viewing" Multiplicity="1" />
+          <End Role="booking" Type="Self.booking" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="viewing">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="booking">
+              <PropertyRef Name="viewingid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ticket_booking">
+          <End Role="booking" Type="Self.booking" Multiplicity="1" />
+          <End Role="ticket" Type="Self.ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="booking">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ticket">
+              <PropertyRef Name="bookingid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_lounge_cinema">
+          <End Role="cinema" Type="Self.cinema" Multiplicity="1" />
+          <End Role="lounge" Type="Self.lounge" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cinema">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="lounge">
+              <PropertyRef Name="cinemaid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_seat_lounge">
+          <End Role="lounge" Type="Self.lounge" Multiplicity="1" />
+          <End Role="seat" Type="Self.seat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lounge">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat">
+              <PropertyRef Name="loungeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_viewing_lounge">
+          <End Role="lounge" Type="Self.lounge" Multiplicity="1" />
+          <End Role="viewing" Type="Self.viewing" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lounge">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="viewing">
+              <PropertyRef Name="loungeid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ticket_seat">
+          <End Role="seat" Type="Self.seat" Multiplicity="1" />
+          <End Role="ticket" Type="Self.ticket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="seat">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ticket">
+              <PropertyRef Name="seatid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="FilmenEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bookings" EntityType="Self.booking" />
+          <EntitySet Name="cinemas" EntityType="Self.cinema" />
+          <EntitySet Name="lounges" EntityType="Self.lounge" />
+          <EntitySet Name="seats" EntityType="Self.seat" />
+          <EntitySet Name="tickets" EntityType="Self.ticket" />
+          <EntitySet Name="users" EntityType="Self.user" />
+          <EntitySet Name="viewings" EntityType="Self.viewing" />
+          <AssociationSet Name="FK_booking_users" Association="Self.FK_booking_users">
+            <End Role="users" EntitySet="users" />
+            <End Role="booking" EntitySet="bookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_booking_viewing" Association="Self.FK_booking_viewing">
+            <End Role="viewing" EntitySet="viewings" />
+            <End Role="booking" EntitySet="bookings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ticket_booking" Association="Self.FK_ticket_booking">
+            <End Role="booking" EntitySet="bookings" />
+            <End Role="ticket" EntitySet="tickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_lounge_cinema" Association="Self.FK_lounge_cinema">
+            <End Role="cinema" EntitySet="cinemas" />
+            <End Role="lounge" EntitySet="lounges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_seat_lounge" Association="Self.FK_seat_lounge">
+            <End Role="lounge" EntitySet="lounges" />
+            <End Role="seat" EntitySet="seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK_viewing_lounge" Association="Self.FK_viewing_lounge">
+            <End Role="lounge" EntitySet="lounges" />
+            <End Role="viewing" EntitySet="viewings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ticket_seat" Association="Self.FK_ticket_seat">
+            <End Role="seat" EntitySet="seats" />
+            <End Role="ticket" EntitySet="tickets" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="FilmenModelStoreContainer" CdmEntityContainer="FilmenEntities">
+          <EntitySetMapping Name="bookings">
+            <EntityTypeMapping TypeName="FilmenModel.booking">
+              <MappingFragment StoreEntitySet="booking">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="viewingid" ColumnName="viewingid" />
+                <ScalarProperty Name="payed" ColumnName="payed" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cinemas">
+            <EntityTypeMapping TypeName="FilmenModel.cinema">
+              <MappingFragment StoreEntitySet="cinema">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lounges">
+            <EntityTypeMapping TypeName="FilmenModel.lounge">
+              <MappingFragment StoreEntitySet="lounge">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="cinemaid" ColumnName="cinemaid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="seats">
+            <EntityTypeMapping TypeName="FilmenModel.seat">
+              <MappingFragment StoreEntitySet="seat">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="loungeid" ColumnName="loungeid" />
+                <ScalarProperty Name="seatnr" ColumnName="seatnr" />
+                <ScalarProperty Name="row" ColumnName="row" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tickets">
+            <EntityTypeMapping TypeName="FilmenModel.ticket">
+              <MappingFragment StoreEntitySet="ticket">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="bookingid" ColumnName="bookingid" />
+                <ScalarProperty Name="seatid" ColumnName="seatid" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="FilmenModel.user">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="viewings">
+            <EntityTypeMapping TypeName="FilmenModel.viewing">
+              <MappingFragment StoreEntitySet="viewing">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="loungeid" ColumnName="loungeid" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="moviedbid" ColumnName="moviedbid" />
+                <ScalarProperty Name="bookable" ColumnName="bookable" />
+                <ScalarProperty Name="created" ColumnName="created" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
